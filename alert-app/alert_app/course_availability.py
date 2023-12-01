@@ -10,6 +10,7 @@ def check_course_availability(url, course_name):
     course_cards = soup.find_all('h2', class_='card-header-title',
                                  string=lambda text: course_name in text)
 
+    availability_messages = []
     for card_header in course_cards:
         card = card_header.find_parent('div', class_='card')
         if card:
@@ -23,10 +24,11 @@ def check_course_availability(url, course_name):
                 link_element = card.find_parent('a', class_='card-link')
                 if link_element and 'href' in link_element.attrs:
                     print(f"URL: {link_element['href']}")
-
-                return f"Availability: {availability_info.get_text(strip=True)}"
+                availability_messages.append(f"Availability: {availability_info.get_text(strip=True)}")
+                
             else:
                 print(f"The course '{course_name}' does not have 'card-places' info available.")
         else:
             print(f"Card structure for '{course_name}' is different than expected.")
-
+    
+    return availability_messages
